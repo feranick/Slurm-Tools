@@ -6,16 +6,17 @@
 # Sizing from a measured job (~1.7 GB RES, ~1.2 cores active, multi-worker):
 #   --cpus-per-task=2  -> covers the active cores, no core contention
 #   --mem=2500M        -> above peak RES so cgroup won't OOM-kill it
-#   Concurrency: 40 CPUs / 2 = ~20 jobs at once (CPU-limited)
-#   --gres=mps:10      -> 100/10 = 10 slices per GPU x 2 GPUs = 20 total
+#   GPU sharing via shard (spans both GPUs). --gres=shard:1 = 1 of 24 slices.
+#   Concurrency ceiling ~24: 24 shards (12/GPU) and memory (60GB/2.5) both ~24.
+#   CPU at cpus-per-task=1 allows 40, so it is not the bottleneck.
 #============================================================
 
 #SBATCH --job-name=DAE
 #SBATCH --partition=long
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=2
-#SBATCH --gres=mps:10
+#SBATCH --cpus-per-task=1
+#SBATCH --gres=shard:1
 #SBATCH --mem=2500M
 #SBATCH --time=100:00:00
 #SBATCH --output=log_%x.o%j
