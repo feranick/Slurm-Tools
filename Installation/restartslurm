@@ -1,0 +1,21 @@
+#!/bin/bash
+# -------------------------------------------------------------------
+# Script: restartslurm
+# Author: feranick <feranick@hotmail.com>
+# Version: 1.1
+# License: Public Domain        
+# -------------------------------------------------------------------
+echo " Stopping slurm-llnl..."
+#sudo /etc/init.d/slurmd stop
+sudo systemctl stop slurmd
+#sudo /etc/init.d/slurmctld stop
+sudo systemctl stop slurmctld
+echo " Done"
+echo " Restarting pbs-torque..." 
+#sudo /etc/init.d/slurmctld start
+sudo systemctl start slurmctld
+#sudo /etc/init.d/slurmd start
+sudo systemctl start slurmd
+echo " Done"
+sudo systemctl status slurmctld
+echo ""
